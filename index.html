@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Buna Circle brings Ethiopian specialty coffee cart catering to gatherings across DC, Maryland, and Virginia." />
+  <title>Buna Circle | Coffee that brings people closer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="canonical" href="https://www.bunacircleco.com/" />
+  <meta property="og:title" content="Buna Circle | Coffee that brings people closer" />
+  <meta property="og:description" content="Ethiopian specialty coffee cart catering for gatherings across DC, Maryland, and Virginia." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.bunacircleco.com/" />
+  <meta property="og:image" content="https://www.bunacircleco.com/assets/event-cart-outdoor.jpg" />
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="home">
+    <a class="brand" href="#home" aria-label="Buna Circle home">
+      <img class="brand-logo" src="assets/buna-circle-logo.jpg" alt="" />
+      <span><b>BUNA CIRCLE</b><small>CONNECTION · CONVERSATION · COMMUNITY</small></span>
+    </a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Main navigation">
+      <a href="#story">Our story</a>
+      <a href="#services">Catering</a>
+      <a href="#menu">Menu</a>
+      <a href="#gallery">Gallery</a>
+      <button class="button button-small" data-open-booking>Check your date</button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Ethiopian specialty coffee · DMV</p>
+        <h1 id="hero-title">Coffee that brings people closer.</h1>
+        <p class="hero-lead">A mobile espresso and Ethiopian coffee experience, thoughtfully served at weddings, workplaces, campuses, and community gatherings.</p>
+        <div class="hero-actions">
+          <button class="button" data-open-booking>Book the coffee cart</button>
+          <a class="text-link" href="#services">Explore catering <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="hero-proof" aria-label="Service highlights">
+          <span><b>DMV-wide</b> mobile service</span>
+          <span><b>50–500+</b> guest events</span>
+          <span><b>Custom</b> menus & branding</span>
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <div class="hero-slider" aria-roledescription="carousel" aria-label="Buna Circle event highlights">
+          <div class="hero-slides" aria-live="off">
+            <figure class="hero-slide active"><img src="assets/event-cart-outdoor.jpg" alt="Buna Circle mobile coffee cart at an outdoor event" /><figcaption>Mobile coffee cart service</figcaption></figure>
+            <figure class="hero-slide"><img src="assets/espresso-prep.jpg" alt="Barista preparing espresso at an outdoor gathering" /><figcaption>Espresso prepared to order</figcaption></figure>
+            <figure class="hero-slide"><img src="assets/event-cart-indoor.jpg" alt="Buna Circle cart styled for a private indoor celebration" /><figcaption>Styled for every occasion</figcaption></figure>
+            <figure class="hero-slide"><img src="assets/event-table-drinks.jpg" alt="Buna Circle drinks served at a decorated celebration table" /><figcaption>Specialty drinks for your guests</figcaption></figure>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-arrow" data-slide-prev aria-label="Previous event photo">←</button>
+            <div class="slider-dots" aria-label="Choose event photo"></div>
+            <button class="slider-arrow" data-slide-next aria-label="Next event photo">→</button>
+          </div>
+          <p class="sr-only" id="slide-status" aria-live="polite"></p>
+        </div>
+        <img class="hero-badge" src="assets/buna-circle-logo.jpg" alt="Buna Circle Company" />
+        <p class="hero-caption">Full-service coffee cart catering across DC, Maryland & Virginia</p>
+      </div>
+    </section>
+
+    <section class="marquee" aria-label="Buna Circle values">
+      <div><span>Single-origin Ethiopian coffee</span><i>✦</i><span>Warm, polished service</span><i>✦</i><span>Gatherings made memorable</span><i>✦</i></div>
+    </section>
+
+    <section class="story section" id="story">
+      <div class="story-image reveal">
+        <img src="assets/espresso-prep.jpg" alt="Buna Circle barista preparing Ethiopian specialty coffee" loading="lazy" />
+        <span class="image-note">From origin to occasion</span>
+      </div>
+      <div class="story-copy reveal">
+        <p class="eyebrow">Our story</p>
+        <h2>Rooted in Buna. Made for belonging.</h2>
+        <p class="large-copy">In Ethiopia, coffee is an invitation to slow down, share stories, and stay awhile. Buna Circle carries that spirit into every gathering we serve.</p>
+        <p>We pair carefully sourced coffee with a polished mobile setup and generous hospitality, so hosts can be present while we take care of every cup.</p>
+        <blockquote>“Sip. Connect. Belong.”</blockquote>
+      </div>
+    </section>
+
+    <section class="services section" id="services" aria-labelledby="services-title">
+      <div class="section-heading reveal">
+        <div><p class="eyebrow">Coffee catering</p><h2 id="services-title">A bar built around your moment.</h2></div>
+        <p>Choose the occasion. We tailor the menu, setup, service pace, and finishing details around your space and guest count.</p>
+      </div>
+      <div class="service-tabs" role="tablist" aria-label="Filter catering services">
+        <button class="active" data-filter="all" role="tab" aria-selected="true">All occasions</button>
+        <button data-filter="celebrate" role="tab" aria-selected="false">Celebrate</button>
+        <button data-filter="connect" role="tab" aria-selected="false">Connect</button>
+        <button data-filter="community" role="tab" aria-selected="false">Community</button>
+      </div>
+      <div class="service-grid">
+        <article class="service-card reveal" data-category="celebrate">
+          <span class="service-number">01</span><h3>Weddings & private celebrations</h3><p>Elegant espresso service, signature drinks, and a warm gathering point for your guests.</p><span class="service-meta">75–300+ guests</span>
+        </article>
+        <article class="service-card featured reveal" data-category="connect">
+          <span class="service-number">02</span><h3>Corporate & workplace events</h3><p>Team mornings, launches, conferences, and appreciation events served with effortless flow.</p><span class="service-meta">50–500+ guests</span>
+        </article>
+        <article class="service-card reveal" data-category="community">
+          <span class="service-number">03</span><h3>Markets, schools & campuses</h3><p>High-volume coffee service made welcoming, efficient, and adaptable to your venue.</p><span class="service-meta">Custom service plans</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="menu-section section" id="menu" aria-labelledby="menu-title">
+      <div class="menu-intro reveal">
+        <p class="eyebrow">The menu</p>
+        <h2 id="menu-title">Familiar favorites. Ethiopian soul.</h2>
+        <p>Every package includes professional baristas, a polished cart, premium ingredients, cups, and complete setup and breakdown.</p>
+        <div class="menu-switcher" role="tablist" aria-label="Coffee menu">
+          <button class="active" data-menu="espresso" role="tab" aria-selected="true">Espresso bar</button>
+          <button data-menu="signature" role="tab" aria-selected="false">Signature</button>
+          <button data-menu="cold" role="tab" aria-selected="false">Cold bar</button>
+        </div>
+      </div>
+      <div class="menu-card reveal" aria-live="polite">
+        <div class="menu-card-top"><span>CURATED FOR YOUR EVENT</span><span>01 / 03</span></div>
+        <div id="menu-items"></div>
+        <p class="menu-note">Oat milk and decaf available. Ask about custom cup branding and drink toppers.</p>
+      </div>
+    </section>
+
+    <section class="process section" aria-labelledby="process-title">
+      <div class="section-heading reveal"><div><p class="eyebrow">How it works</p><h2 id="process-title">Easy to book. Lovely to host.</h2></div></div>
+      <ol class="process-list">
+        <li class="reveal"><span>01</span><div><h3>Tell us the vision</h3><p>Share your date, venue, guest count, and the feeling you want to create.</p></div></li>
+        <li class="reveal"><span>02</span><div><h3>Receive your proposal</h3><p>We shape the right service package, menu, timing, and custom details.</p></div></li>
+        <li class="reveal"><span>03</span><div><h3>Gather around</h3><p>Our team arrives ready to serve. You enjoy the room and your guests.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="gallery section" id="gallery" aria-labelledby="gallery-title">
+      <div class="section-heading reveal"><div><p class="eyebrow">From the cart</p><h2 id="gallery-title">Gatherings we remember.</h2></div><p>Real moments, beautiful pours, and a circle that gets a little wider with every event.</p></div>
+      <div class="gallery-grid">
+        <button class="gallery-item tall" data-full="assets/event-cart-indoor.jpg"><img src="assets/event-cart-indoor.jpg" alt="Buna Circle cart at a private celebration" /></button>
+        <button class="gallery-item" data-full="assets/matcha-drink.jpg"><img src="assets/matcha-drink.jpg" alt="Layered specialty matcha drink with Buna Circle label" /></button>
+        <button class="gallery-item" data-full="assets/cherry-latte.jpg"><img src="assets/cherry-latte.jpg" alt="Iced specialty latte served at a cherry-themed event" /></button>
+        <div class="gallery-quote"><p>“The coffee cart became the heart of the room.”</p><span>Private event · Washington, DC</span></div>
+      </div>
+    </section>
+
+    <section class="cta section">
+      <div class="cta-copy reveal"><p class="eyebrow">Now booking the DMV</p><h2>Bring the circle to your next gathering.</h2><p>Tell us a few details and we will follow up with availability and a tailored proposal.</p></div>
+      <button class="button button-light reveal" data-open-booking>Start your inquiry <span aria-hidden="true">↗</span></button>
+    </section>
+  </main>
+
+  <button class="booking-fab" data-open-booking><span>Check availability</span><b>Book your event</b></button>
+
+  <footer>
+    <a class="brand footer-brand" href="#home"><img class="brand-logo" src="assets/buna-circle-logo.jpg" alt="" /><span><b>BUNA CIRCLE CO.</b><small>SPECIALTY COFFEE FROM ETHIOPIA</small></span></a>
+    <address><b>Contact</b><p class="footer-links">
+      <a href="tel:+17036460333"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h3l1.5 5-2 1.5a16 16 0 0 0 6 6l1.5-2 5 1.5v3c0 2-1 4-4 4C10 21 3 14 3 6c0-3 2-4 4-4Z" /></svg><span>(703) 646-0333</span></a>
+      <a href="mailto:info@bunacircleco.com"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 5h18v14H3V5Zm1 1 8 7 8-7M4 18l6-6m10 6-6-6" /></svg><span>info@bunacircleco.com</span></a>
+      <a href="https://www.bunacircleco.com"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg><span>www.bunacircleco.com</span></a>
+    </p></address>
+    <div><b>Follow the circle</b><p class="footer-links">
+      <a href="https://www.instagram.com/bunacircle"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" class="icon-fill" /></svg><span>Instagram @bunacircle</span></a>
+      <a href="https://www.tiktok.com/@buna.circle"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3v11.5a4.5 4.5 0 1 1-4-4.47V13a2 2 0 1 0 1.5 1.94V3h2.5Zm0 0c.7 2.4 2.2 3.8 5 4v3c-2-.1-3.6-.8-5-2" /></svg><span>TikTok @buna.circle</span></a>
+    </p></div>
+    <p class="copyright">© 2026 Buna Circle Co. · Connection · Conversation · Community</p>
+  </footer>
+
+  <dialog id="booking-dialog" aria-labelledby="booking-title">
+    <div class="booking-form">
+      <button class="dialog-close" type="button" data-close-booking aria-label="Close booking form">×</button>
+      <p class="eyebrow">Event inquiry</p>
+      <h2 id="booking-title">Let’s make your gathering memorable.</h2>
+      <p>Complete the inquiry below. Your response is securely recorded in Google Forms, and our team will follow up with availability and next steps.</p>
+      <div class="inquiry-embed" id="inquiry-embed" aria-live="polite">
+        <p class="inquiry-loading">Loading the inquiry form…</p>
+      </div>
+      <noscript><p>Please <a href="mailto:info@bunacircleco.com">email Buna Circle</a> or call <a href="tel:+17036460333">(703) 646-0333</a> to inquire.</p></noscript>
+    </div>
+  </dialog>
+
+  <dialog id="lightbox"><button class="dialog-close" aria-label="Close image">×</button><img alt="Expanded gallery view" /></dialog>
+</body>
+</html>
