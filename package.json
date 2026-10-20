@@ -1,0 +1,6 @@
+{
+  "name": "bunacircleco",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test tests/*.test.mjs", "deploy": "npx wrangler deploy" }
+}

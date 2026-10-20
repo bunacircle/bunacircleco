@@ -1,0 +1,54 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { handleRequest, toGoogleForm, validateInquiry } from '../worker.mjs';
+const valid = {
+  contactName: 'TEST Native Form', email: 'test@example.com', phone: '2025550100',
+  organization: 'Test only', eventTypes: ['Wedding', 'Other'], otherEventType: 'Reception',
+  eventDate: '2099-12-20', startTime: '14:30', endTime: '16:00', setting: 'Indoor',
+  electricity: 'Yes', guestCount: 80, location: 'Washington, DC',
+  preferredServices: ['Full coffee cart and matcha', 'Other'], otherService: 'Decaf',
+  customService: 'No', budgetRange: 'Not sure yet', notes: 'Integration test', consent: true,
+};
+const request = (data = valid, origin = 'https://www.bunacircleco.com') => new Request('https://www.bunacircleco.com/api/inquiries', {
+  method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+});
+test('maps dates, 24-hour times, exact service choices, and Other answers to Google', () => {
+  const p = toGoogleForm(validateInquiry(valid).inquiry);
+  assert.deepEqual(p.getAll('entry.283827731'), ['Wedding', '__other_option__']);
+  assert.equal(p.get('entry.283827731.other_option_response'), 'Reception');
+  assert.deepEqual(p.getAll('entry.1874275231'), ['Full coffee cart + matcha', '__other_option__']);
+  assert.equal(p.get('entry.459757787_year'), '2099');
+  assert.equal(p.get('entry.1050720942_hour'), '14');
+  assert.equal(p.get('entry.1050720942_minute'), '30');
+  assert.equal(p.get('entry.625484560_minute'), '0');
+});
+test('rejects bad email, impossible dates, inverted times, missing consent and empty choices', () => {
+  for (const change of [{ email: 'bad' }, {eventDate: '2099-02-31'}, {endTime: '13:00'}, {consent: false}, {eventTypes: []}, {guestCount: 0}, {otherService: ''}]) {
+    assert.equal(validateInquiry({...valid, ...change}).ok, false, JSON.stringify(change));
+  }
+});
+test('rejects cross-origin and oversized submissions before contacting Google', async () => {
+  const noFetch = () => { throw new Error('must not call Google'); };
+  assert.equal((await handleRequest(request(valid, 'https://example.com'), {}, noFetch)).status, 403);
+  assert.equal((await handleRequest(request({...valid, notes:'x'.repeat(26000)}), {}, noFetch)).status, 413);
+});
+test('reports success only after Google confirms receipt; never retries an uncertain POST', async () => {
+  let calls = 0;
+  const accepted = await handleRequest(request(), {}, async (url, options) => {
+    calls++;
+    assert.equal(options.method, 'POST');
+    assert.equal(options.body.get('entry.204922629'), 'test@example.com');
+    return new Response('Your response has been recorded.');
+  });
+  assert.deepEqual(await accepted.json(), {ok: true});
+  assert.equal(calls, 1);
+  for (const response of [new Response('Please complete required questions'), new Response('Service unavailable', {status:503})]) {
+    assert.equal((await handleRequest(request(), {}, async () => response)).status, 502);
+  }
+  assert.equal((await handleRequest(request(), {}, async () => { throw Error('timeout'); })).status, 502);
+});
+test('static requests use the asset binding and API GET cannot submit', async () => {
+  const result = await handleRequest(new Request('https://www.bunacircleco.com/book/'), {ASSETS:{fetch:()=>new Response('booking page')}});
+  assert.equal(await result.text(), 'booking page');
+  assert.equal((await handleRequest(new Request('https://www.bunacircleco.com/api/inquiries'), {})).status, 405);
+});
