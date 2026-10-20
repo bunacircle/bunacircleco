@@ -144,27 +144,13 @@ footer a { text-underline-offset: 3px; }
 .footer-links svg { width: 1.05rem; height: 1.05rem; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .footer-links .icon-fill { fill: currentColor; stroke: none; }
 .copyright { grid-column: 1 / -1; margin: 0; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.12); font-size: .68rem; }
-.booking-fab { position: fixed; z-index: 19; right: 1.25rem; bottom: 1.25rem; display: none; border: 1px solid var(--brass); background: var(--forest); color: white; padding: .75rem 1rem; box-shadow: 0 8px 30px rgba(0,0,0,.22); text-align: left; }
+.booking-fab { position: fixed; z-index: 19; right: 1.25rem; bottom: 1.25rem; display: none; border: 1px solid var(--brass); background: var(--forest); color: white; padding: .75rem 1rem; box-shadow: 0 8px 30px rgba(0,0,0,.22); text-align: left; text-decoration: none; }
 .booking-fab span, .booking-fab b { display: block; }
 .booking-fab span { color: var(--brass); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; }
 .booking-fab b { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
 dialog { width: min(720px, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); border: 0; padding: 0; background: var(--paper); color: var(--ink); }
 dialog::backdrop { background: rgba(10,19,11,.78); backdrop-filter: blur(5px); }
-.booking-form { padding: clamp(2rem, 5vw, 4rem); position: relative; }
 .dialog-close { position: absolute; top: 1rem; right: 1rem; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: transparent; font-size: 1.5rem; }
-.booking-form h2 { font-size: clamp(2.4rem, 5vw, 4rem); }
-.inquiry-embed { min-height: 420px; margin-top: 2rem; background: white; border: 1px solid var(--line); }
-.inquiry-embed iframe { display: block; width: 100%; height: min(680px, 68dvh); border: 0; }
-.inquiry-loading, .inquiry-fallback { padding: 2rem; }
-.inquiry-fallback p { margin-bottom: 1.5rem; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
-.form-grid label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-.form-grid input, .form-grid select, .form-grid textarea { width: 100%; margin-top: .4rem; border: 1px solid var(--line); border-radius: 0; padding: .85rem; background: white; color: var(--ink); text-transform: none; letter-spacing: 0; }
-.form-grid .full { grid-column: 1/-1; }
-.full-button { width: 100%; margin-top: 1rem; }
-.form-note { margin: .65rem 0 0; text-align: center; font-size: .68rem; color: #687069; }
-.form-result { margin-top: 1rem; padding: 1rem; border: 1px solid var(--brass); background: var(--cream); }
-.form-result p { margin: .35rem 0 .65rem; font-size: .85rem; }
 #lightbox { width: min(1000px, calc(100% - 2rem)); background: transparent; overflow: visible; }
 #lightbox img { max-height: 85dvh; object-fit: contain; }
 #lightbox .dialog-close { color: white; border-color: white; top: -3rem; right: 0; }
@@ -205,9 +191,8 @@ dialog::backdrop { background: rgba(10,19,11,.78); backdrop-filter: blur(5px); }
   .gallery-grid { display: flex; flex-direction: column; }
   .gallery-item { height: 300px; }
   .gallery-quote { min-height: 260px; }
-  .form-grid, footer { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; }
   footer { padding-bottom: 7rem; }
-  .form-grid .full { grid-column: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
