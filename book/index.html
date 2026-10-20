@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Request Buna Circle coffee cart catering for your wedding, workplace, campus, or community gathering." />
+  <title>Book Buna Circle | Event inquiry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/book/book.css" />
+  <link rel="canonical" href="https://www.bunacircleco.com/book/" />
+  <script src="/book/book.js" defer></script>
+</head>
+<body class="booking-page">
+  <a class="skip-link" href="#booking-main">Skip to booking form</a>
+  <header class="booking-header">
+    <a class="brand" href="/" aria-label="Buna Circle home">
+      <img class="brand-logo" src="/assets/buna-circle-logo.jpg" alt="" />
+      <span><b>BUNA CIRCLE</b><small>CONNECTION · CONVERSATION · COMMUNITY</small></span>
+    </a>
+    <a class="booking-back" href="/"><span aria-hidden="true">←</span> Back to the site</a>
+  </header>
+
+  <main class="booking-main" id="booking-main">
+    <aside class="booking-intro">
+      <p class="eyebrow">Event inquiry</p>
+      <h1>Good coffee.<br>Great company.<br>Your gathering.</h1>
+      <img class="booking-photo" src="/assets/event-cart-indoor.jpg" alt="Buna Circle coffee cart ready to welcome guests at a celebration" />
+      <p>Tell us about your event and the coffee experience you have in mind. We’ll follow up with availability, package options, and a tailored quote.</p>
+      <div class="booking-promise">
+        <span>01</span>
+        <p><b>Thoughtful planning</b>Every proposal is shaped around your guests, space, and service needs.</p>
+      </div>
+      <div class="booking-promise">
+        <span>02</span>
+        <p><b>A personal reply</b>Our team will review your plans and follow up with availability and a tailored proposal.</p>
+      </div>
+      <p class="booking-contact">Prefer to talk? Call <a href="tel:+17036460333">(703) 646-0333</a> or email <a href="mailto:bunacircle@gmail.com">bunacircle@gmail.com</a>.</p>
+    </aside>
+
+    <section class="booking-panel" aria-labelledby="form-title">
+      <div class="form-heading">
+        <div>
+          <p class="eyebrow">Book the coffee cart</p>
+          <h2 id="form-title">Your event details</h2>
+        </div>
+        <p id="step-counter" aria-live="polite">Step 1 of 3</p>
+      </div>
+
+      <ol class="form-progress" aria-label="Booking progress">
+        <li class="active" data-progress-step="0"><span>1</span>About you</li>
+        <li data-progress-step="1"><span>2</span>The event</li>
+        <li data-progress-step="2"><span>3</span>Your service</li>
+      </ol>
+
+      <form id="booking-form" novalidate>
+        <input class="form-honeypot" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <fieldset class="form-step active" data-step="0">
+          <legend><span>Step one</span>Tell us about you</legend>
+          <p class="step-intro">We’ll use these details only to respond to this event inquiry.</p>
+          <div class="booking-grid">
+            <label>
+              Contact name <span aria-hidden="true">*</span>
+              <input type="text" name="contactName" autocomplete="name" maxlength="100" required />
+            </label>
+            <label>
+              Email address <span aria-hidden="true">*</span>
+              <input type="email" name="email" autocomplete="email" maxlength="160" required />
+            </label>
+            <label>
+              Phone number <span aria-hidden="true">*</span>
+              <input type="tel" name="phone" autocomplete="tel" maxlength="30" required />
+            </label>
+            <label>
+              Company, organization, or event host <span aria-hidden="true">*</span>
+              <input type="text" name="organization" autocomplete="organization" maxlength="140" required />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-step" data-step="1" hidden>
+          <legend><span>Step two</span>Tell us about the gathering</legend>
+          <p class="step-intro">The practical details help us recommend the right cart setup and service pace.</p>
+
+          <fieldset class="choice-field" data-required-group="eventTypes">
+            <legend>Event name or occasion <span aria-hidden="true">*</span></legend>
+            <div class="choice-grid">
+              <label><input type="checkbox" name="eventTypes" value="Private party" /> <span>Private party</span></label>
+              <label><input type="checkbox" name="eventTypes" value="Wedding" /> <span>Wedding</span></label>
+              <label><input type="checkbox" name="eventTypes" value="Corporate event" /> <span>Corporate event</span></label>
+              <label><input type="checkbox" name="eventTypes" value="Church or ministry event" /> <span>Church / ministry</span></label>
+              <label><input type="checkbox" name="eventTypes" value="School event" /> <span>School event</span></label>
+              <label><input type="checkbox" name="eventTypes" value="Other" data-reveals="other-event" /> <span>Other</span></label>
+            </div>
+            <label class="conditional-field" id="other-event" hidden>
+              Other occasion
+              <input type="text" name="otherEventType" maxlength="120" />
+            </label>
+            <p class="field-error" data-group-error="eventTypes"></p>
+          </fieldset>
+
+          <div class="booking-grid">
+            <label>
+              Event date <span aria-hidden="true">*</span>
+              <input type="date" name="eventDate" required />
+            </label>
+            <label>
+              Estimated number of guests <span aria-hidden="true">*</span>
+              <input type="number" name="guestCount" inputmode="numeric" min="1" max="5000" required />
+            </label>
+            <label>
+              Start time <span aria-hidden="true">*</span>
+              <input type="time" name="startTime" required />
+            </label>
+            <label>
+              End time <span aria-hidden="true">*</span>
+              <input type="time" name="endTime" required />
+            </label>
+          </div>
+
+          <fieldset class="choice-field">
+            <legend>Will the event be indoors or outdoors? <span aria-hidden="true">*</span></legend>
+            <div class="choice-grid choice-grid--three">
+              <label><input type="radio" name="setting" value="Indoor" required /> <span>Indoor</span></label>
+              <label><input type="radio" name="setting" value="Outdoor" /> <span>Outdoor</span></label>
+              <label><input type="radio" name="setting" value="Both" /> <span>Both</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-field">
+            <legend>Will electricity be available? <span aria-hidden="true">*</span></legend>
+            <div class="choice-grid choice-grid--two">
+              <label><input type="radio" name="electricity" value="Yes" required /> <span>Yes</span></label>
+              <label><input type="radio" name="electricity" value="No" /> <span>No</span></label>
+            </div>
+          </fieldset>
+
+          <label class="full-field">
+            Event location <span aria-hidden="true">*</span>
+            <small>For a private home, city and ZIP code are enough.</small>
+            <input type="text" name="location" autocomplete="street-address" maxlength="240" required />
+          </label>
+        </fieldset>
+
+        <fieldset class="form-step" data-step="2" hidden>
+          <legend><span>Step three</span>Shape the coffee experience</legend>
+          <p class="step-intro">Choose everything you are considering. We’ll help refine the final service package.</p>
+
+          <fieldset class="choice-field" data-required-group="preferredServices">
+            <legend>Preferred service <span aria-hidden="true">*</span></legend>
+            <div class="choice-list">
+              <label><input type="checkbox" name="preferredServices" value="Full coffee cart service" /> <span>Full coffee cart service</span></label>
+              <label><input type="checkbox" name="preferredServices" value="Full coffee cart and matcha" /> <span>Full coffee cart + matcha</span></label>
+              <label><input type="checkbox" name="preferredServices" value="Full coffee cart, matcha, and refreshers" /> <span>Full coffee cart + matcha + refreshers</span></label>
+              <label><input type="checkbox" name="preferredServices" value="Full coffee cart and refreshers" /> <span>Full coffee cart + refreshers</span></label>
+              <label><input type="checkbox" name="preferredServices" value="Other" data-reveals="other-service" /> <span>Other service idea</span></label>
+            </div>
+            <label class="conditional-field" id="other-service" hidden>
+              Other service
+              <input type="text" name="otherService" maxlength="160" />
+            </label>
+            <p class="field-error" data-group-error="preferredServices"></p>
+          </fieldset>
+
+          <fieldset class="choice-field">
+            <legend>Would you like custom service? <span aria-hidden="true">*</span></legend>
+            <p class="field-help">This can include a custom menu, personalized cups or sleeves, branded signage, or pastry pairing.</p>
+            <div class="choice-grid choice-grid--two">
+              <label><input type="radio" name="customService" value="Yes" required /> <span>Yes, tell me more</span></label>
+              <label><input type="radio" name="customService" value="No" /> <span>Not for this event</span></label>
+            </div>
+          </fieldset>
+
+          <label class="full-field">
+            Estimated budget range <span aria-hidden="true">*</span>
+            <small>This helps us recommend an experience that fits your plans.</small>
+            <select name="budgetRange" required>
+              <option value="">Select a range</option>
+              <option>Under $1,000</option>
+              <option>$1,000–$1,499</option>
+              <option>$1,500–$2,499</option>
+              <option>$2,500–$3,999</option>
+              <option>$4,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+
+          <label class="full-field">
+            Additional notes
+            <small>Share anything else about your event, vision, or coffee needs.</small>
+            <textarea name="notes" rows="6" maxlength="2000"></textarea>
+          </label>
+
+          <label class="consent-field">
+            <input type="checkbox" name="consent" value="yes" required />
+            <span>I agree that Buna Circle may contact me about this event inquiry. <b aria-hidden="true">*</b></span>
+          </label>
+
+        </fieldset>
+
+        <div class="form-status" id="form-status" role="alert" aria-live="assertive" hidden></div>
+
+        <div class="form-actions">
+          <button class="button button-secondary" type="button" id="previous-step" hidden>Back</button>
+          <button class="button" type="button" id="next-step">Continue</button>
+          <button class="button" type="submit" id="submit-inquiry" hidden>Send my inquiry</button>
+        </div>
+        <p class="required-note"><span aria-hidden="true">*</span> Required field</p>
+      </form>
+
+      <section class="booking-success" id="booking-success" tabindex="-1" hidden>
+        <svg aria-hidden="true" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36"/><path d="m24 41 10 10 22-24"/></svg>
+        <p class="eyebrow">Inquiry received</p>
+        <h2>Thank you for inviting us into the circle.</h2>
+        <p>Your event details are with our team. We’ll follow up at <b id="success-email"></b> with availability and next steps.</p>
+        <a class="button" href="/">Return to Buna Circle</a>
+      </section>
+
+      <noscript><p class="noscript-note">JavaScript is required for the booking form. Please email <a href="mailto:bunacircle@gmail.com">bunacircle@gmail.com</a> or call <a href="tel:+17036460333">(703) 646-0333</a>.</p></noscript>
+    </section>
+  </main>
+
+  <footer class="booking-footer">
+    <p>© 2026 Buna Circle Co. · Sip. Connect. Belong.</p>
+    <a href="mailto:bunacircle@gmail.com">bunacircle@gmail.com</a>
+  </footer>
+</body>
+</html>
