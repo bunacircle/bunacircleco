@@ -1,0 +1,9 @@
+{
+  "name": "bunacircleco",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check app.js && node --check book/book.js && node --check worker.mjs && node --check < google-apps-script/Code.gs && node --check < google-apps-script/EmailTemplates.gs && node -e \"JSON.parse(require('fs').readFileSync('google-apps-script/appsscript.json', 'utf8'))\" && git diff --check",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

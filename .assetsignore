@@ -1,0 +1,14 @@
+.git/
+.github/
+.wrangler/
+google-apps-script/
+tests/
+.assetsignore
+.gitignore
+CNAME
+LICENSE
+README.md
+package.json
+package-lock.json
+worker.mjs
+wrangler.jsonc

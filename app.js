@@ -133,31 +133,6 @@ nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () =>
   menuToggle.setAttribute("aria-expanded", "false");
 }));
 
-const booking = document.querySelector("#booking-dialog");
-document.querySelectorAll("[data-open-booking]").forEach((button) => button.addEventListener("click", () => booking.showModal()));
-document.querySelector("[data-close-booking]").addEventListener("click", () => booking.close());
-booking.addEventListener("click", (event) => { if (event.target === booking) booking.close(); });
-
-const inquiryEmbed = document.querySelector("#inquiry-embed");
-const formUrl = window.BUNA_CIRCLE_CONFIG?.googleFormEmbedUrl;
-
-if (formUrl) {
-  const iframe = document.createElement("iframe");
-  iframe.src = formUrl;
-  iframe.title = "Buna Circle event inquiry form";
-  iframe.loading = "lazy";
-  iframe.referrerPolicy = "strict-origin-when-cross-origin";
-  iframe.setAttribute("frameborder", "0");
-  inquiryEmbed.replaceChildren(iframe);
-} else {
-  inquiryEmbed.innerHTML = `
-    <div class="inquiry-fallback" role="status">
-      <b>Online inquiries are being connected.</b>
-      <p>For immediate assistance, email us or call <a href="tel:+17036460333">(703) 646-0333</a>.</p>
-      <a class="button" href="mailto:info@bunacircleco.com?subject=Buna%20Circle%20event%20inquiry">Email your inquiry</a>
-    </div>`;
-}
-
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = lightbox.querySelector("img");
 document.querySelectorAll(".gallery-item").forEach((button) => button.addEventListener("click", () => {
