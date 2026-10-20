@@ -178,4 +178,3 @@ const today = new Date();
 today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
 form.elements.eventDate.min = today.toISOString().slice(0, 10);
 showStep(0, false);
-
