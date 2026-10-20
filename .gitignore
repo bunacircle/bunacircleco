@@ -1,3 +1,6 @@
 node_modules/
 .wrangler/
 .dev.vars
+
+email-preview.html
+team-email-preview.html

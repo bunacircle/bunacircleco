@@ -50,3 +50,11 @@ Then open `http://localhost:8080`.
 - Confirm the domain uses HTTPS.
 - Confirm mobile and desktop layouts.
 - Replace any copy, menu items, or service claims that are not final business offerings.
+
+## Branded inquiry emails
+
+`google-apps-script/Code.gs` contains the complete spreadsheet-trigger script and inline HTML templates. Each new submission sends a structured team notification, followed by a customer receipt with event details, next steps, and a row-based inquiry reference. Both messages include plain-text fallbacks; submitted values are HTML escaped.
+
+Paste the complete file into the existing response spreadsheet's Apps Script project and save. Retain the existing `onFormSubmit` trigger; do not add a second trigger or run the handler manually. Test by submitting the form with your own email address and checking both messages. Template changes apply to future submissions only. References use spreadsheet row numbers: do not sort/delete rows in the raw response tab; use a separate view to manage inquiries.
+
+Customer replies go to `bunacircle@gmail.com` while the domain mailbox is being repaired. This script does not claim to send from the custom-domain address or reserve dates. Each submission uses three email-recipient quota units (two staff recipients plus the customer). Avoid manually rerunning an execution after a partial delivery, since that can duplicate messages.
