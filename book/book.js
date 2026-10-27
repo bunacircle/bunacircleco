@@ -68,8 +68,9 @@ const validateTimes = (step) => {
   if (step.dataset.step !== "1") return true;
   const start = step.querySelector('[name="startTime"]');
   const end = step.querySelector('[name="endTime"]');
-  const valid = !start.value || !end.value || end.value > start.value;
-  end.setCustomValidity(valid ? "" : "End time must be later than start time.");
+  const minutes = (value) => Number(value.slice(0, 2)) * 60 + Number(value.slice(3));
+  const valid = !start.value || !end.value || minutes(end.value) - minutes(start.value) >= 60;
+  end.setCustomValidity(valid ? "" : "End time must be at least one hour after start time.");
   return valid;
 };
 
@@ -85,7 +86,7 @@ const validateStep = (step) => {
   if (!groupsValid || !timesValid || !controlsValid) {
     const firstInvalid = step.querySelector(":invalid, .is-invalid input");
     if (!step.hidden) firstInvalid?.focus();
-    setStatus("Please complete the highlighted fields before continuing.");
+    setStatus(timesValid ? "Please complete the highlighted fields before continuing." : "End time must be at least one hour after start time.");
     return false;
   }
   return true;
