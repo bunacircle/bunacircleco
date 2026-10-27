@@ -52,3 +52,21 @@ test('static requests use the asset binding and API GET cannot submit', async ()
   assert.equal(await result.text(), 'booking page');
   assert.equal((await handleRequest(new Request('https://www.bunacircleco.com/api/inquiries'), {})).status, 405);
 });
+
+test('requires at least 60 minutes, including times that cross an hour boundary', () => {
+  for (const [startTime, endTime, expected] of [
+    ['10:00', '10:00', false], ['10:00', '10:59', false],
+    ['10:00', '11:00', true], ['10:00', '11:01', true],
+    ['10:45', '11:44', false], ['10:45', '11:45', true],
+    ['23:00', '00:00', false], ['22:59', '23:59', true],
+  ]) {
+    const result = validateInquiry({...valid, startTime, endTime});
+    assert.equal(result.ok, expected, `${startTime}–${endTime}`);
+    if (!expected) assert.equal(result.message, 'End time must be at least one hour after start time.');
+  }
+});
+test('API rejects a short event without forwarding to Google', async () => {
+  const response = await handleRequest(request({...valid, startTime:'10:00', endTime:'10:59'}), {}, () => assert.fail('must not submit to Google'));
+  assert.equal(response.status, 422);
+  assert.equal((await response.json()).error.message, 'End time must be at least one hour after start time.');
+});

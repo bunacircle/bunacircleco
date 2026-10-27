@@ -121,7 +121,6 @@ export const validateInquiry = (raw) => {
     || !EMAIL_PATTERN.test(inquiry.email)
     || !TIME_PATTERN.test(inquiry.startTime)
     || !TIME_PATTERN.test(inquiry.endTime)
-    || inquiry.endTime <= inquiry.startTime
     || !eventDateIsValid
     || !Number.isInteger(inquiry.guestCount)
     || inquiry.guestCount < 1
@@ -135,6 +134,11 @@ export const validateInquiry = (raw) => {
     || !inquiry.consent
   ) {
     return { ok: false, message: "Please review the required event details and try again." };
+  }
+
+  const minutes = (value) => Number(value.slice(0, 2)) * 60 + Number(value.slice(3));
+  if (minutes(inquiry.endTime) - minutes(inquiry.startTime) < 60) {
+    return { ok: false, message: "End time must be at least one hour after start time." };
   }
 
   if (inquiry.eventTypes.includes("Other") && !inquiry.otherEventType) {
