@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { handleRequest, toGoogleForm, validateInquiry } from '../worker.mjs';
-import { InquiryEmail, emailHash } from '../inquiry-emails.mjs';
+import { InquiryEmail, eventHash } from '../inquiry-emails.mjs';
 const valid = {
   contactName: 'TEST Native Form', email: 'test@example.com', phone: '2025550100',
   organization: 'Test only', eventTypes: ['Wedding', 'Other'], otherEventType: 'Reception',
@@ -17,7 +17,7 @@ const request = (data = valid, origin = 'https://www.bunacircleco.com') => new R
 const duplicateEnv = (history = []) => {
   const stores = new Map();
   return {
-    INQUIRY_EMAIL_HISTORY: JSON.stringify(history),
+    INQUIRY_EVENT_HISTORY: JSON.stringify(history),
     INQUIRY_EMAILS: {
       idFromName: (hash) => hash,
       get: (id) => ({ fetch: (url, options) => {
@@ -94,13 +94,13 @@ test('API rejects a short event without forwarding to Google', async () => {
   assert.equal((await response.json()).error.message, 'End time must be at least one hour after start time.');
 });
 
-test('blocks an existing sheet email after normalizing spaces and capitalization', async () => {
-  const env = duplicateEnv([await emailHash('test@example.com')]);
-  const response = await handleRequest(request({...valid, email: '  TEST@Example.COM  '}), env, () => assert.fail('must not submit a duplicate'));
+test('blocks an existing sheet event after normalizing email and venue', async () => {
+  const env = duplicateEnv([await eventHash(valid)]);
+  const response = await handleRequest(request({...valid, email: '  TEST@Example.COM  ', location: '  WASHINGTON,   DC  '}), env, () => assert.fail('must not submit a duplicate'));
   assert.equal(response.status, 409);
-  assert.equal((await response.json()).error.code, 'DUPLICATE_EMAIL');
+  assert.equal((await response.json()).error.code, 'DUPLICATE_EVENT');
 });
-test('concurrent submissions and later retries forward the same email only once', async () => {
+test('concurrent submissions and later retries forward the same event only once', async () => {
   const env = duplicateEnv();
   let calls = 0;
   const accepted = async () => { calls++; return new Response('Your response has been recorded.'); };
@@ -120,4 +120,30 @@ test('missing, invalid or unavailable duplicate storage fails before contacting 
   for (const env of [{}, duplicateEnv(['bad hash']), {...duplicateEnv(), INQUIRY_EMAILS: {idFromName: () => {throw Error('unavailable');}}}]) {
     assert.equal((await handleRequest(request(), env, () => assert.fail('must not submit without duplicate protection'))).status, 503);
   }
+});
+
+test('same email can inquire about a different date, start time, or venue', async () => {
+  const env = duplicateEnv([await eventHash(valid)]);
+  let calls = 0;
+  const accepted = async () => { calls++; return new Response('Your response has been recorded.'); };
+  for (const change of [{eventDate:'2099-12-21'}, {startTime:'14:00'}, {location:'Another venue, DC'}]) {
+    const nextEvent = {...valid, ...change};
+    assert.equal((await handleRequest(request(nextEvent), env, accepted)).status, 200);
+    assert.equal((await handleRequest(request(nextEvent), env, accepted)).status, 409);
+  }
+  assert.equal(calls, 3);
+});
+test('changing notes, services, guests, or end time does not create a new event', async () => {
+  const env = duplicateEnv([await eventHash(valid)]);
+  for (const change of [{notes:'Edited notes'}, {guestCount:100}, {endTime:'17:00'}, {preferredServices:['Full coffee cart service']}]) {
+    assert.equal((await handleRequest(request({...valid, ...change}), env, () => assert.fail('must not resubmit the same event'))).status, 409);
+  }
+});
+test('legacy email-only claims do not block a different event', async () => {
+  const env = duplicateEnv();
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(valid.email));
+  const legacyHash = Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2,'0')).join('');
+  await env.INQUIRY_EMAILS.get(legacyHash).fetch('https://inquiry-email/reserve', {method:'POST'});
+  env.INQUIRY_EMAIL_HISTORY = JSON.stringify([legacyHash]);
+  assert.equal((await handleRequest(request(), env, async () => new Response('Your response has been recorded.'))).status, 200);
 });

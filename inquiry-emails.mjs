@@ -1,26 +1,29 @@
 export const duplicateInquiry = () => new Response(JSON.stringify({
   ok: false,
   error: {
-    code: 'DUPLICATE_EMAIL',
-    message: 'An inquiry or submission attempt already exists for this email. Please reply to your confirmation or contact bunacircle@gmail.com to update it.',
+    code: 'DUPLICATE_EVENT',
+    message: 'An inquiry or submission attempt already exists for this email, event date, start time, and venue. Please reply to your confirmation or contact bunacircle@gmail.com to update this event.',
   },
 }), { status: 409, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 
-export const emailHash = async (email) => {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+export const eventHash = async ({ email, eventDate, startTime, location }) => {
+  const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, ' ').toLowerCase();
+  const key = JSON.stringify([normalize(email), eventDate, startTime, normalize(location)]);
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 };
 
-export const reserveInquiryEmail = async (email, env) => {
+export const reserveInquiryEvent = async (inquiry, env) => {
   // Missing history must stop delivery, otherwise older inquiries would bypass the check.
-  const history = JSON.parse(env.INQUIRY_EMAIL_HISTORY);
+  const history = JSON.parse(env.INQUIRY_EVENT_HISTORY);
   if (!Array.isArray(history) || history.some((hash) => typeof hash !== 'string' || !/^[a-f0-9]{64}$/.test(hash))) {
-    throw new Error('Invalid inquiry email history');
+    throw new Error('Invalid inquiry event history');
   }
-  const hash = await emailHash(email);
+  const hash = await eventHash(inquiry);
   // shortcut: history is a snapshot; refresh it if inquiries are added outside the website.
   if (history.includes(hash)) return duplicateInquiry();
-  const id = env.INQUIRY_EMAILS.idFromName(hash);
+  // Reuse the namespace, but never read the old email-only claims.
+  const id = env.INQUIRY_EMAILS.idFromName('event-v1:' + hash);
   return env.INQUIRY_EMAILS.get(id).fetch('https://inquiry-email/reserve', { method: 'POST' });
 };
 

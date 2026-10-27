@@ -1,4 +1,4 @@
-import { reserveInquiryEmail } from './inquiry-emails.mjs';
+import { reserveInquiryEvent } from './inquiry-emails.mjs';
 export { InquiryEmail } from './inquiry-emails.mjs';
 
 const MAX_BODY_BYTES = 25_000;
@@ -229,9 +229,9 @@ export const handleRequest = async (request, env, fetcher = fetch) => {
   const result = validateInquiry(raw);
   if (!result.ok) return apiError(422, 'VALIDATION_ERROR', result.message);
   try {
-    const reservation = await reserveInquiryEmail(result.inquiry.email, env);
+    const reservation = await reserveInquiryEvent(result.inquiry, env);
     if (reservation.status === 409) return reservation;
-    if (reservation.status !== 201) throw new Error('Email reservation unavailable');
+    if (reservation.status !== 201) throw new Error('Event reservation unavailable');
   } catch {
     return apiError(503, 'DUPLICATE_CHECK_UNAVAILABLE', 'We could not check for an existing inquiry. Please try again later or contact bunacircle@gmail.com.');
   }
