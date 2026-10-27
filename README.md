@@ -7,8 +7,8 @@ Static single-page website for Buna Circle's Ethiopian specialty coffee cart and
 - GitHub stores the source.
 - Cloudflare Workers hosts the static site and custom domain.
 - A branded, three-step form at `/book/` collects inquiries.
-- A Cloudflare Worker checks email uniqueness, then forwards validated submissions to the existing Google Form.
-- A SQLite-backed Durable Object reserves each normalized email before delivery.
+- A Cloudflare Worker checks event uniqueness, then forwards validated submissions to the existing Google Form.
+- A SQLite-backed Durable Object reserves each normalized event key before delivery.
 - Google Sheets stores responses.
 - A Google Apps Script form-submit trigger emails each inquiry to `info@bunacircleco.com` and `bunacircle@gmail.com`.
 - No application database, server to maintain, or paid form-processing API is required.
@@ -26,7 +26,7 @@ The script looks for an email question named `Email`, `Email address`, or `Custo
 
 ## Deploy with Cloudflare Workers
 
-The `wrangler.jsonc` configuration serves static assets and routes `/api/*` through `worker.mjs`. Deploy the GitHub branch through the existing Cloudflare Workers project, using `npx wrangler deploy` as the deploy command. No Apps Script web-app deployment is needed. Configure the private historical email hashes described below before deploying email uniqueness.
+The `wrangler.jsonc` configuration serves static assets and routes `/api/*` through `worker.mjs`. Deploy the GitHub branch through the existing Cloudflare Workers project, using `npx wrangler deploy` as the deploy command. No Apps Script web-app deployment is needed. Configure the private historical email hashes described below before deploying event uniqueness.
 
 `POST /api/inquiries` accepts the fields in `book/book.js` and returns `{ "ok": true }` only after Google confirms receipt. Errors return `{ "ok": false, "error": { "code": "…", "message": "…" } }` with a non-2xx status. The Worker validates required fields, dates, times, choices, consent, origin, and body size. It never logs submissions or automatically retries uncertain deliveries.
 
@@ -60,14 +60,16 @@ Paste the complete file into the existing response spreadsheet's Apps Script pro
 
 Customer replies go to `bunacircle@gmail.com` while the domain mailbox is being repaired. This script does not claim to send from the custom-domain address or reserve dates. Each submission uses three email-recipient quota units (two staff recipients plus the customer). Avoid manually rerunning an execution after a partial delivery, since that can duplicate messages.
 
-## One inquiry per email
+## One inquiry per event
 
-The website accepts at most one delivery attempt per email address, with leading/trailing spaces removed and case ignored. Different addresses remain independent; Gmail aliases and plus-addresses are not merged. The existing Sheet and email trigger are unchanged. Duplicate submissions return HTTP 409 with `DUPLICATE_EMAIL`; the booking page displays the message without clearing the entered details.
+The website checks email + event date + start time + venue. A returning customer can use the same email for a different date, start time, or venue. Matching all four fields returns HTTP 409 with `DUPLICATE_EVENT`, directing the customer to update the existing inquiry by email. Changes to notes, end time, services, or guest count do not create a new event. The booking page preserves entered details when displaying the error.
 
-Before deploying this version, export the current response Sheet privately and hash each nonempty Email Address value using SHA-256 after `trim().toLowerCase()`. Set the Cloudflare Worker **secret** `INQUIRY_EMAIL_HISTORY` to a JSON array of those 64-character lowercase hex hashes. Keep the secret on future deployments. Do not put the Sheet, email list, or hashes in the public repository. For local tests, use `INQUIRY_EMAIL_HISTORY="[]"` in ignored `.dev.vars`. A missing/invalid secret or unavailable Durable Object stops submission with HTTP 503 before contacting Google.
+`eventHash` in `inquiry-emails.mjs` is the canonical key function. Email and venue are normalized with Unicode NFKC, trimmed, repeated whitespace collapsed, and lowercased. Date and start time must be canonical `YYYY-MM-DD` and `HH:mm` values. SHA-256 hashes the JSON array `[email, date, startTime, venue]`; Gmail aliases, punctuation, and address abbreviations are not merged.
 
-`wrangler.jsonc` creates the `INQUIRY_EMAILS` binding and SQLite namespace through migration `inquiry-email-v1`. Each object is named by the email hash and stores a boolean claim in an atomic transaction. The claim persists across deployments and is never automatically released: Google may have recorded a submission even when its response times out. A customer whose first attempt failed must contact the team to check the Sheet before retrying. After confirming no inquiry was saved, an operator can remove only that hash's `reserved` key through Cloudflare's Durable Object storage tools to permit another attempt. Do not delete claims without checking the Sheet and email history first.
+Before deploying this version, export the response Sheet privately and convert each complete row's date/time into those canonical formats, then hash it using `eventHash`. Set the Cloudflare Worker **secret** `INQUIRY_EVENT_HISTORY` to a JSON array of the unique lowercase hex hashes. Keep it on future deployments. Do not put response data or hashes in the public repository. For local tests, use `INQUIRY_EVENT_HISTORY="[]"` in ignored `.dev.vars`. Missing/invalid history or unavailable storage stops submission with HTTP 503 before contacting Google. Historical rows missing a venue cannot participate in the four-field match; fill in their actual venues and refresh the history if those inquiries still need protection.
 
-Historical hashes are a deployment-time snapshot. Submissions made directly to the old Google Form, or rows added manually after that export, bypass this website check. Use the native website form for inquiries; if other sources remain active, refresh the private history before deployment or move all intake behind one shared duplicate check. Existing duplicate rows are retained.
+The existing `INQUIRY_EMAILS` binding, `InquiryEmail` class, and migration remain in place to avoid a storage migration. New objects are named `event-v1:` followed by the event hash, so the old email-only claims and `INQUIRY_EMAIL_HISTORY` secret do not block returning customers. The old claims remain stored but are no longer consulted. Each event object atomically stores a boolean claim before delivery; it persists across deployments. Claims are retained after uncertain delivery because Google may have saved the inquiry even when its response times out. The customer must contact the team to check the Sheet before any operator permits another attempt for that same event.
 
-Run `npm test` for normalization, historical matches, concurrent requests, retries after uncertain delivery, storage failures, and the existing validation/email checks.
+Historical hashes are a deployment-time snapshot. Later submissions directly to the old Google Form, or manually added rows, bypass the website check. Use the native website form for intake; refresh the private history when importing records from other sources. Existing rows are retained.
+
+Run `npm test` for returning customers, historical event matches, normalization, concurrent requests, uncertain-delivery retries, legacy email-only claims, storage failures, and the existing validation/email checks.
