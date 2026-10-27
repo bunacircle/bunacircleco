@@ -1,3 +1,6 @@
+import { reserveInquiryEmail } from './inquiry-emails.mjs';
+export { InquiryEmail } from './inquiry-emails.mjs';
+
 const MAX_BODY_BYTES = 25_000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -225,6 +228,13 @@ export const handleRequest = async (request, env, fetcher = fetch) => {
   if (raw?.website) return apiError(422, 'VALIDATION_ERROR', 'Please review your inquiry.');
   const result = validateInquiry(raw);
   if (!result.ok) return apiError(422, 'VALIDATION_ERROR', result.message);
+  try {
+    const reservation = await reserveInquiryEmail(result.inquiry.email, env);
+    if (reservation.status === 409) return reservation;
+    if (reservation.status !== 201) throw new Error('Email reservation unavailable');
+  } catch {
+    return apiError(503, 'DUPLICATE_CHECK_UNAVAILABLE', 'We could not check for an existing inquiry. Please try again later or contact bunacircle@gmail.com.');
+  }
   try {
     const response = await fetcher('https://docs.google.com/forms/d/e/1FAIpQLSetlgDZbeQFbq-WjON5xLFuaXxiStmQE7CNvdmOjuXy-CchAQ/formResponse?hl=en', {
       method: 'POST',

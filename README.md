@@ -5,9 +5,10 @@ Static single-page website for Buna Circle's Ethiopian specialty coffee cart and
 ## Architecture
 
 - GitHub stores the source.
-- Cloudflare Pages hosts the static site and custom domain at no application-hosting cost.
+- Cloudflare Workers hosts the static site and custom domain.
 - A branded, three-step form at `/book/` collects inquiries.
-- A Cloudflare Worker forwards validated submissions to the existing Google Form.
+- A Cloudflare Worker checks email uniqueness, then forwards validated submissions to the existing Google Form.
+- A SQLite-backed Durable Object reserves each normalized email before delivery.
 - Google Sheets stores responses.
 - A Google Apps Script form-submit trigger emails each inquiry to `info@bunacircleco.com` and `bunacircle@gmail.com`.
 - No application database, server to maintain, or paid form-processing API is required.
@@ -25,7 +26,7 @@ The script looks for an email question named `Email`, `Email address`, or `Custo
 
 ## Deploy with Cloudflare Workers
 
-The `wrangler.jsonc` configuration serves static assets and routes `/api/*` through `worker.mjs`. Deploy the GitHub branch through the existing Cloudflare Workers project, using `npx wrangler deploy` as the deploy command. No API keys or Apps Script web-app deployment are needed for form submission.
+The `wrangler.jsonc` configuration serves static assets and routes `/api/*` through `worker.mjs`. Deploy the GitHub branch through the existing Cloudflare Workers project, using `npx wrangler deploy` as the deploy command. No Apps Script web-app deployment is needed. Configure the private historical email hashes described below before deploying email uniqueness.
 
 `POST /api/inquiries` accepts the fields in `book/book.js` and returns `{ "ok": true }` only after Google confirms receipt. Errors return `{ "ok": false, "error": { "code": "…", "message": "…" } }` with a non-2xx status. The Worker validates required fields, dates, times, choices, consent, origin, and body size. It never logs submissions or automatically retries uncertain deliveries.
 
@@ -58,3 +59,15 @@ Then open `http://localhost:8080`.
 Paste the complete file into the existing response spreadsheet's Apps Script project and save. Retain the existing `onFormSubmit` trigger; do not add a second trigger or run the handler manually. Test by submitting the form with your own email address and checking both messages. Template changes apply to future submissions only. References use spreadsheet row numbers: do not sort/delete rows in the raw response tab; use a separate view to manage inquiries.
 
 Customer replies go to `bunacircle@gmail.com` while the domain mailbox is being repaired. This script does not claim to send from the custom-domain address or reserve dates. Each submission uses three email-recipient quota units (two staff recipients plus the customer). Avoid manually rerunning an execution after a partial delivery, since that can duplicate messages.
+
+## One inquiry per email
+
+The website accepts at most one delivery attempt per email address, with leading/trailing spaces removed and case ignored. Different addresses remain independent; Gmail aliases and plus-addresses are not merged. The existing Sheet and email trigger are unchanged. Duplicate submissions return HTTP 409 with `DUPLICATE_EMAIL`; the booking page displays the message without clearing the entered details.
+
+Before deploying this version, export the current response Sheet privately and hash each nonempty Email Address value using SHA-256 after `trim().toLowerCase()`. Set the Cloudflare Worker **secret** `INQUIRY_EMAIL_HISTORY` to a JSON array of those 64-character lowercase hex hashes. Keep the secret on future deployments. Do not put the Sheet, email list, or hashes in the public repository. For local tests, use `INQUIRY_EMAIL_HISTORY="[]"` in ignored `.dev.vars`. A missing/invalid secret or unavailable Durable Object stops submission with HTTP 503 before contacting Google.
+
+`wrangler.jsonc` creates the `INQUIRY_EMAILS` binding and SQLite namespace through migration `inquiry-email-v1`. Each object is named by the email hash and stores a boolean claim in an atomic transaction. The claim persists across deployments and is never automatically released: Google may have recorded a submission even when its response times out. A customer whose first attempt failed must contact the team to check the Sheet before retrying. After confirming no inquiry was saved, an operator can remove only that hash's `reserved` key through Cloudflare's Durable Object storage tools to permit another attempt. Do not delete claims without checking the Sheet and email history first.
+
+Historical hashes are a deployment-time snapshot. Submissions made directly to the old Google Form, or rows added manually after that export, bypass this website check. Use the native website form for inquiries; if other sources remain active, refresh the private history before deployment or move all intake behind one shared duplicate check. Existing duplicate rows are retained.
+
+Run `npm test` for normalization, historical matches, concurrent requests, retries after uncertain delivery, storage failures, and the existing validation/email checks.

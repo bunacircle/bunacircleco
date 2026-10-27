@@ -2,6 +2,10 @@
   "name": "bunacircleco",
   "main": "worker.mjs",
   "compatibility_date": "2026-10-20",
+  "durable_objects": {
+    "bindings": [{ "name": "INQUIRY_EMAILS", "class_name": "InquiryEmail" }]
+  },
+  "migrations": [{ "tag": "inquiry-email-v1", "new_sqlite_classes": ["InquiryEmail"] }],
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
