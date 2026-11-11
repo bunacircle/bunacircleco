@@ -72,10 +72,14 @@ export function validatePromotion(raw) {
 
 async function bridge(env, action, data, fetcher) {
   if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(env.PROMOTIONS_SCRIPT_URL || '') || (env.PROMOTIONS_BRIDGE_SECRET || '').length < 32) throw new Error('The Gmail connection has not been configured.');
-  const payload = JSON.stringify({action, issuedAt:Date.now(), ...data});
+  // Keep the signed wire text ASCII so HTTP charset decoding cannot change its bytes.
+  const payload = JSON.stringify({action, issuedAt:Date.now(), ...data})
+    .replace(/[\u007f-\uffff]/g, character => `\\u${character.charCodeAt(0).toString(16).padStart(4,'0')}`);
+  const body = JSON.stringify({payload, signature:await sign(payload, env.PROMOTIONS_BRIDGE_SECRET)});
+  if (body.length > 600000) throw new Error('This email is too large for the selected audience. Start a new campaign with a shorter message or fewer contacts.');
   const response = await fetcher(env.PROMOTIONS_SCRIPT_URL, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({payload, signature:await sign(payload, env.PROMOTIONS_BRIDGE_SECRET)}),
+    method:'POST', headers:{'Content-Type':'application/json; charset=utf-8'},
+    body,
     signal:AbortSignal.timeout(120000), redirect:'follow',
   });
   if (!response.ok) throw new Error('Google did not confirm the request. Check the delivery log before trying again.');
