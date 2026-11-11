@@ -61,6 +61,33 @@ test('blocks cross-origin sends and validates template input',async()=>{
   assert.notEqual(oversized.status,200);
   assert.match((await oversized.json()).error.message,/too large/);
 });
+test('keeps signed email text intact when the HTTP receiver decodes bytes as Latin-1',async()=>{
+  const unicodeMessage={...message,body:'We’re gathering—coffee ☕ brings people together 🫶'};
+  let received;
+  const legacyDecoder=async(url,init)=>{
+    if(url.endsWith('/certs'))return fetcher(url,init);
+    const wire=Buffer.from(init.body,'utf8').toString('latin1');
+    received=JSON.parse(JSON.parse(wire).payload);
+    return fetcher(url,{...init,body:wire});
+  };
+  const response=await handlePromotions(await request('/api/promotions/test',{id:crypto.randomUUID(),message:unicodeMessage}),env,legacyDecoder);
+  assert.equal(response.status,200);
+  assert.match(received.recipients[0].text,/We’re gathering—coffee ☕ brings people together 🫶/);
+  assert.match(received.recipients[0].html,/You’re invited/);
+});
+test('rejects an oversized encoded campaign before forwarding any recipient',async()=>{
+  const largeMessage={...message,body:'界'.repeat(2000)};
+  const preview=await (await handlePromotions(await request('/api/promotions/test',{id:crypto.randomUUID(),message:largeMessage}),env,fetcher)).json();
+  assert.ok(preview.testReceipt);
+  let calls=0;
+  const tracked=async(url,init)=>{if(!url.endsWith('/certs'))calls++;return fetcher(url,init);};
+  const response=await handlePromotions(await request('/api/promotions/send',{
+    id:crypto.randomUUID(),message:largeMessage,emails:Array.from({length:20},(_,index)=>`guest${index}@example.com`),consentConfirmed:true,testReceipt:preview.testReceipt,
+  }),env,tracked);
+  assert.notEqual(response.status,200);
+  assert.match((await response.json()).error.message,/too large/);
+  assert.equal(calls,0);
+});
 test('encrypts unsubscribe addresses; GET confirms and POST suppresses without owner login',async()=>{
   const token=await unsubscribeToken('alex@example.com',secret);
   assert.equal(await tokenEmail(token,secret),'alex@example.com');
