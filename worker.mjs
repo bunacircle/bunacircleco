@@ -1,4 +1,5 @@
 import { reserveInquiryEvent } from './inquiry-emails.mjs';
+import { handlePromotions } from './promotions.mjs';
 export { InquiryEmail } from './inquiry-emails.mjs';
 
 const MAX_BODY_BYTES = 25_000;
@@ -201,6 +202,7 @@ export const toGoogleForm = (inquiry) => {
 
 export const handleRequest = async (request, env, fetcher = fetch) => {
   const url = new URL(request.url);
+  if (url.pathname === '/studio' || url.pathname.startsWith('/studio/') || url.pathname.startsWith('/api/promotions') || url.pathname === '/unsubscribe') return handlePromotions(request, env, fetcher);
   if (url.pathname !== '/api/inquiries') return env.ASSETS.fetch(request);
   if (request.method !== 'POST') return apiError(405, 'METHOD_NOT_ALLOWED', 'Please submit the inquiry form.');
   if (request.headers.get('Origin') !== url.origin) return apiError(403, 'ORIGIN_NOT_ALLOWED', 'Please submit from the Buna Circle website.');

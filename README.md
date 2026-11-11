@@ -2,6 +2,10 @@
 
 Static single-page website for Buna Circle's Ethiopian specialty coffee cart and catering service in DC, Maryland, and Virginia.
 
+## Staff promotional email studio
+
+`/studio/` provides branded email editing, recipient selection, CSV imports, inquiry-contact loading, an owner-only test step and individual Gmail delivery through a signed Apps Script bridge. Cloudflare Access restricts the studio and its API to the business account. Unsubscribe and campaign delivery records live in separate tabs of the existing response spreadsheet. The feature rejects access until its private configuration is complete; it does not change inquiry processing. Follow [the deployment and verification guide](google-apps-script/PROMOTIONS-SETUP.md) before enabling campaigns.
+
 ## Architecture
 
 - GitHub stores the source.

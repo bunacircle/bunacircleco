@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Email studio · Buna Circle</title>
+  <link rel="stylesheet" href="studio.css">
+  <script type="module" src="studio.js"></script>
+</head>
+<body>
+  <a class="skip" href="#editor">Skip to editor</a>
+  <header><a class="brand" href="https://www.bunacircleco.com">BUNA CIRCLE<small>CONNECTION · CONVERSATION · COMMUNITY</small></a><span class="mode">STAFF EMAIL STUDIO</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">A NOTE FROM BUNA CIRCLE</p><h1>Make the next<br>connection.</h1><p>Thoughtful emails, with your signature warmth.</p></div><aside><b>From your circle, to theirs.</b><p>Personal emails sent individually through bunacircle@gmail.com. Start with a test, then send to your selected audience.</p><small>Edits and contacts stay in this tab. Refreshing clears them.</small></aside></div>
+    <div class="workspace">
+      <div class="controls">
+        <form id="editor">
+          <h2><span>01</span> The message</h2>
+          <label>Subject<input name="subject" required maxlength="150" value="Good coffee. Better gatherings. | Buna Circle"></label>
+          <label>Inbox preview<input name="preheader" maxlength="200" value="Bring thoughtful coffee service and a warm welcome to your next gathering."></label>
+          <label>Eyebrow<input name="eyebrow" maxlength="100" value="A LITTLE SOMETHING TO GATHER AROUND"></label>
+          <label>Headline<textarea name="headline" rows="2" maxlength="150" required>Good coffee.
+Better gatherings.</textarea></label>
+          <label>Opening message<textarea name="body" rows="4" maxlength="2000" required>A welcome drink. A familiar conversation. A moment to slow down together. Bring a little Buna Circle warmth to your next celebration.</textarea></label>
+          <div class="pair"><label>Button label<input name="cta" maxlength="70" required value="LET’S PLAN YOUR EVENT"></label><label>Button URL<input name="url" type="url" required value="https://www.bunacircleco.com/book/"></label></div>
+          <h2><span>02</span> The footer</h2>
+          <p class="help">Your configured business mailing address and each recipient’s private unsubscribe link are added when sending.</p>
+        </form>
+        <section aria-labelledby="audience-title">
+          <h2 id="audience-title"><span>03</span> Your audience</h2>
+          <p class="help">Add people who agreed to receive promotions. An event inquiry alone doesn’t confirm a marketing subscription.</p>
+          <label>Selected email addresses<textarea id="emails" rows="3" placeholder="alex@example.com, sam@example.com"></textarea></label>
+          <div class="actions"><button id="add" type="button">Add emails</button><label class="file">Import CSV<input id="csv" type="file" accept=".csv,text/csv"></label><button id="load-contacts" class="text-button" type="button">Load inquiry contacts</button></div>
+          <p class="help">CSV needs an Email or Email Address column. Name is optional. Up to 1,000 contacts; duplicates are merged.</p>
+          <label>Find a contact<input id="search" type="search" placeholder="Search by name or email"></label>
+          <div class="selection"><strong id="count">0 selected</strong><button id="select" type="button" class="text-button">Select visible</button><button id="clear" type="button" class="text-button">Clear selection</button></div>
+          <div id="contacts"><p class="empty">Your audience starts here.<br>Add emails or import a contact list.</p></div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="delivery" aria-labelledby="delivery-title">
+          <h2 id="delivery-title"><span>04</span> Review &amp; send</h2>
+          <p id="connection" role="status">Checking your Gmail connection…</p>
+          <p class="help">Up to 20 recipients per campaign. Thirty daily recipient slots are reserved for inquiry emails. Unsubscribed contacts are skipped automatically.</p>
+          <button id="test" type="button" disabled>Send test to my Gmail</button>
+          <label class="check"><input type="checkbox" id="reviewed">I received and reviewed this exact email in Gmail.</label>
+          <label class="check"><input type="checkbox" id="permission">Everyone selected agreed to receive promotional emails from Buna Circle.</label>
+          <button id="send" type="button" disabled>Send to selected contacts</button>
+          <button id="new-campaign" type="button" class="text-button">Start a new campaign</button>
+          <p id="delivery-status" role="status" aria-live="polite"></p>
+          <ul id="delivery-results" aria-label="Delivery results"></ul>
+          <p class="help">“Sent” means Google accepted the email. Check the inbox and Spam folder for actual delivery. If a result is unknown, check Marketing Deliveries in your response spreadsheet before sending again.</p>
+        </section>
+      </div>
+      <section class="preview" aria-labelledby="preview-title">
+        <div class="preview-heading"><div><p class="eyebrow">THE FINISHING TOUCH</p><h2 id="preview-title">Your email, brought to life.</h2></div><span>LIVE PREVIEW</span></div>
+        <div class="envelope"><b>Buna Circle Co.</b><p id="subject-preview"></p><small id="preheader-preview"></small></div>
+        <iframe title="Buna Circle email preview" sandbox="" referrerpolicy="no-referrer"></iframe>
+        <p class="help">Preview uses a placeholder footer. The delivered email includes your configured address and working unsubscribe link.</p>
+      </section>
+    </div>
+  </main>
+  <footer>BUNA CIRCLE CO. <span>Sip. Connect. Belong.</span></footer>
+</body>
+</html>
