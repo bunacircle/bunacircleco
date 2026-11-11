@@ -2,6 +2,7 @@
   "name": "bunacircleco",
   "main": "worker.mjs",
   "compatibility_date": "2026-10-20",
+  "keep_vars": true,
   "routes": [
     { "pattern": "bunacircleco.com", "custom_domain": true },
     { "pattern": "www.bunacircleco.com", "custom_domain": true }

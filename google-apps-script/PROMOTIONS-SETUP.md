@@ -21,6 +21,8 @@ Keep `/unsubscribe` public so recipients can update their preferences without a 
 
 Set these production Worker variables, preserving the existing inquiry bindings/secrets:
 
+`wrangler.jsonc` sets `keep_vars: true` so later Git deployments retain these dashboard-managed runtime variables. Keep private connection values out of the repository.
+
 | Name | Value |
 | --- | --- |
 | `PROMOTIONS_ACCESS_TEAM` | Your actual team hostname, such as `your-team.cloudflareaccess.com`, without `https://` |
